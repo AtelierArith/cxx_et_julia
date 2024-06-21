@@ -1,0 +1,51 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "C++ と Julia を往復する話. 於 JuliaTokai 19",
+    "section": "",
+    "text": "このWebページでは JuliaTokai 19 で話す資料・リンクを格納する.\n\nslide\n\nC++ で記述された既存の資源を Julia から使う方法，Juliaで作った資源を C++ のコードに埋め込む方法を紹介する．"
+  },
+  {
+    "objectID": "index.html#概要",
+    "href": "index.html#概要",
+    "title": "C++ と Julia を往復する話. 於 JuliaTokai 19",
+    "section": "",
+    "text": "このWebページでは JuliaTokai 19 で話す資料・リンクを格納する.\n\nslide\n\nC++ で記述された既存の資源を Julia から使う方法，Juliaで作った資源を C++ のコードに埋め込む方法を紹介する．"
+  },
+  {
+    "objectID": "index.html#その他",
+    "href": "index.html#その他",
+    "title": "C++ と Julia を往復する話. 於 JuliaTokai 19",
+    "section": "その他",
+    "text": "その他\n\nこのページは Quarto を使って構築されている．qmd ファイルは こちら で管理されている．読者は教育・研究目的であれば自由に使用ができる．"
+  },
+  {
+    "objectID": "slide/slide.html#概要",
+    "href": "slide/slide.html#概要",
+    "title": "C++ と Julia を連携する",
+    "section": "概要",
+    "text": "概要\n\nC++ の資源，Julia の資源を相互に活用する例を紹介する\n例はいくつか作っている\nC++ 詳しい人参入お待ちしてます"
+  },
+  {
+    "objectID": "slide/slide.html#ここからは-cxxwrap.jl-入門",
+    "href": "slide/slide.html#ここからは-cxxwrap.jl-入門",
+    "title": "C++ と Julia を連携する",
+    "section": "ここからは CxxWrap.jl 入門",
+    "text": "ここからは CxxWrap.jl 入門\n\n教材:\n\nhttps://github.com/terasakisatoshi/cmake-playground\n\nCMake のお勉強のために作ったもの"
+  },
+  {
+    "objectID": "slide/slide.html#c-には興味がないが-c-には興味がある人へ",
+    "href": "slide/slide.html#c-には興味がないが-c-には興味がある人へ",
+    "title": "C++ と Julia を連携する",
+    "section": "C++ には興味がないが C には興味がある人へ",
+    "text": "C++ には興味がないが C には興味がある人へ\nおめでとうございます．このスライドを読む必要は全くありません．Clang.jl を使いましょう．\nClang.jl を使って binding を作った例\nlibqrean をフォークしたもの - https://github.com/terasakisatoshi/libqrean/tree/julia/LibQREAN"
+  },
+  {
+    "objectID": "slide/slide.html#c-に関する-web-上の役立つ資料",
+    "href": "slide/slide.html#c-に関する-web-上の役立つ資料",
+    "title": "C++ と Julia を連携する",
+    "section": "C++ に関する Web 上の役立つ資料",
+    "text": "C++ に関する Web 上の役立つ資料\n\ncpprefjp - C++日本語リファレンス\nIDA Kenichiro, ゼロから学ぶ C++\nkaityo256, python2cpp/header/README.md\nCMake Tutorial\ntermoshtt, cmake tutorial\n@shohirose(広瀬 翔), CMakeの使い方（その１）, Qiita\ndc1394/cppcode_matome"
+  }
+]
