@@ -558,13 +558,13 @@ code span.wa { color: #dcc6e0; }
 font-size: 60px;
 }
 section p {
-font-size: 35px;
+font-size: 30px;
 }
 section ul {
-font-size:35px;
+font-size:30px;
 }
 section li {
-font-size: 35px;
+font-size: 30px;
 }
 </style>
   <style type="text/css">.reveal
@@ -1433,6 +1433,10 @@ SatoshiTerasaki@AtelierArith
 <span id="cb6-14"><a></a>  <span class="at">-I</span><span class="va">${JL}</span>/include/julia <span class="dt">\</span></span>
 <span id="cb6-15"><a></a>  <span class="at">-L</span><span class="va">${JL}</span>/lib <span class="dt">\</span></span>
 <span id="cb6-16"><a></a>  <span class="at">-ljulia</span> <span class="at">-lcxxwrap_julia</span> hello.cpp <span class="at">-o</span> libhello<span class="va">${SHARED_LIB_EXT}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section class="slide level2">
+
+<h3 id="コンパイルオプションについて">コンパイルオプションについて</h3>
 <ul>
 <li><code>-I</code> でヘッダーファイルのパスを指定する
 <ul>
@@ -1457,31 +1461,35 @@ SatoshiTerasaki@AtelierArith
 <section class="slide level2">
 
 <h3 id="julia-側から使う">Julia 側から使う</h3>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a></a><span class="im">using</span> <span class="bu">Test</span></span>
-<span id="cb7-2"><a></a></span>
-<span id="cb7-3"><a></a><span class="co"># Load the module and generate the functions</span></span>
-<span id="cb7-4"><a></a><span class="kw">module</span> CppHello</span>
-<span id="cb7-5"><a></a><span class="im">using</span> <span class="bu">Libdl</span>: dlext</span>
-<span id="cb7-6"><a></a></span>
-<span id="cb7-7"><a></a><span class="im">using</span> <span class="bu">CxxWrap</span></span>
-<span id="cb7-8"><a></a><span class="pp">@wrapmodule</span>(() <span class="op">-&gt;</span> <span class="fu">joinpath</span>(<span class="st">&quot;.&quot;</span>, <span class="st">&quot;libhello.</span><span class="sc">$</span>(dlext)<span class="st">&quot;</span>))</span>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a></a><span class="co"># Load the module and generate the functions</span></span>
+<span id="cb7-2"><a></a><span class="kw">module</span> CppHello</span>
+<span id="cb7-3"><a></a><span class="im">using</span> <span class="bu">Libdl</span>: dlext</span>
+<span id="cb7-4"><a></a></span>
+<span id="cb7-5"><a></a><span class="im">using</span> <span class="bu">CxxWrap</span></span>
+<span id="cb7-6"><a></a><span class="pp">@wrapmodule</span>(() <span class="op">-&gt;</span> <span class="fu">joinpath</span>(<span class="st">&quot;.&quot;</span>, <span class="st">&quot;libhello.</span><span class="sc">$</span>(dlext)<span class="st">&quot;</span>))</span>
+<span id="cb7-7"><a></a></span>
+<span id="cb7-8"><a></a><span class="co"># この時点で `greet` という Julia としての関数が定義されている</span></span>
 <span id="cb7-9"><a></a></span>
-<span id="cb7-10"><a></a><span class="co"># この時点で `greet` という Julia としての関数が定義されている</span></span>
-<span id="cb7-11"><a></a></span>
-<span id="cb7-12"><a></a><span class="kw">function</span> <span class="fu">__init__</span>()</span>
-<span id="cb7-13"><a></a>    <span class="co"># この呪文を忘れると実行時に Segmentation fault が生じる</span></span>
-<span id="cb7-14"><a></a>    <span class="pp">@initcxx</span></span>
-<span id="cb7-15"><a></a><span class="kw">end</span></span>
-<span id="cb7-16"><a></a></span>
-<span id="cb7-17"><a></a><span class="kw">end</span> <span class="co"># module</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-10"><a></a><span class="kw">function</span> <span class="fu">__init__</span>()</span>
+<span id="cb7-11"><a></a>    <span class="co"># この呪文を忘れると実行時に Segmentation fault が生じる</span></span>
+<span id="cb7-12"><a></a>    <span class="pp">@initcxx</span></span>
+<span id="cb7-13"><a></a><span class="kw">end</span></span>
+<span id="cb7-14"><a></a></span>
+<span id="cb7-15"><a></a><span class="kw">end</span> <span class="co"># module</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section class="slide level2">
+
+<h3 id="julia-パッケージのテスト">Julia パッケージのテスト</h3>
 <ul>
 <li><code>CppHello</code> モジュールの中に <code>greet</code> という関数が定義される</li>
 <li>下記のようにテストをする</li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a></a><span class="pp">@testset</span> <span class="st">&quot;greet&quot;</span> <span class="cf">begin</span></span>
-<span id="cb8-2"><a></a>    <span class="co"># Call greet and show the result</span></span>
-<span id="cb8-3"><a></a>    <span class="pp">@test</span> CppHello.<span class="fu">greet</span>(<span class="st">&quot;Hello World&quot;</span>) <span class="op">==</span> <span class="st">&quot;Hello World&quot;</span></span>
-<span id="cb8-4"><a></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a></a><span class="im">using</span> <span class="bu">Test</span></span>
+<span id="cb8-2"><a></a></span>
+<span id="cb8-3"><a></a><span class="pp">@testset</span> <span class="st">&quot;greet&quot;</span> <span class="cf">begin</span></span>
+<span id="cb8-4"><a></a>    <span class="co"># Call greet and show the result</span></span>
+<span id="cb8-5"><a></a>    <span class="pp">@test</span> CppHello.<span class="fu">greet</span>(<span class="st">&quot;Hello World&quot;</span>) <span class="op">==</span> <span class="st">&quot;Hello World&quot;</span></span>
+<span id="cb8-6"><a></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section class="slide level2">
 
@@ -1494,6 +1502,9 @@ SatoshiTerasaki@AtelierArith
 <li>テスト</li>
 <li>みんなに使ってらう</li>
 </ul>
+</section>
+<section class="slide level2">
+
 <h4 id="ビルドここが一番しんどい">ビルド（<strong>ここが一番しんどい</strong>）</h4>
 <ul>
 <li><p>大事なことなので２回言いました</p></li>
@@ -1522,6 +1533,10 @@ SatoshiTerasaki@AtelierArith
 <span id="cb9-13"><a></a></span>
 <span id="cb9-14"><a></a><span class="co"># hello というターゲットは何に依存しているか（リンクすべきか）を記述</span></span>
 <span id="cb9-15"><a></a><span class="kw">target_link_libraries</span>(<span class="bn">hello</span> <span class="bn">JlCxx::cxxwrap_julia</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section class="slide level2">
+
+<h3 id="cmake-を使うメリット">CMake を使うメリット</h3>
 <ul>
 <li>cxxwrap1 の例では <code>jlcxx/jlcxx.hpp</code>, <code>julia.h</code> をインクルードするためのディレクトリを指定する必要があった
 <ul>
@@ -1690,7 +1705,9 @@ SatoshiTerasaki@AtelierArith
 <section class="slide level2">
 
 <h3 id="例-要素を-3-倍にする関数">例: 要素を 3 倍にする関数</h3>
-<p>行列であれば <code>static Eigen::MatrixXd y;</code> を宣言して y に値を格納する方法を採用すればできた．</p>
+<ul>
+<li>行列であれば <code>static Eigen::MatrixXd y;</code> を宣言して y に値を格納する方法を採用すればできた．</li>
+</ul>
 <div class="sourceCode" id="cb17"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb17-1"><a></a><span class="pp">#include </span><span class="im">&lt;Eigen/Dense&gt;</span></span>
 <span id="cb17-2"><a></a></span>
 <span id="cb17-3"><a></a><span class="co">// 要素を 3 倍にする</span></span>
@@ -1704,7 +1721,13 @@ SatoshiTerasaki@AtelierArith
 <span id="cb17-11"><a></a>  y <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> x <span class="op">+</span> x<span class="op">;</span></span>
 <span id="cb17-12"><a></a>  <span class="cf">return</span> jlcxx<span class="op">::</span>make_julia_array<span class="op">(</span>y<span class="op">.</span>data<span class="op">(),</span> size0<span class="op">,</span> size1<span class="op">);</span></span>
 <span id="cb17-13"><a></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>異なるサイズを持つ <code>x::Matrix{Float64}</code> を入力として受け付けることができている</p>
+</section>
+<section class="slide level2">
+
+<h3 id="例-要素を-3-倍にする関数-1">例: 要素を 3 倍にする関数</h3>
+<ul>
+<li>異なるサイズを持つ <code>x::Matrix{Float64}</code> を入力として受け付けることができている</li>
+</ul>
 <div class="sourceCode" id="cb18"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a></a><span class="im">using</span> <span class="bu">MyCxxWrap6</span></span>
 <span id="cb18-2"><a></a>x <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">5</span>, <span class="fl">5</span>)</span>
 <span id="cb18-3"><a></a>v <span class="op">=</span> <span class="fu">triple</span>(x)</span>
@@ -1809,7 +1832,9 @@ SatoshiTerasaki@AtelierArith
 <section class="slide level2">
 
 <h3 id="まとめ">まとめ</h3>
-<p>C++ Julia CxxWrap.jl の</p>
+<ul>
+<li>C++ Julia CxxWrap.jl の使い方を書きました</li>
+</ul>
 </section>
 <section class="slide level2">
 
@@ -1817,9 +1842,6 @@ SatoshiTerasaki@AtelierArith
 <section>
 <section id="appendix" class="title-slide slide level1 center">
 <h1>Appendix</h1>
-
-</section>
-<section class="slide level2">
 
 </section>
 <section class="slide level2">
