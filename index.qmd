@@ -1,0 +1,14 @@
+---
+title: "C++ と Julia を往復する話. 於 JuliaTokai 19"
+---
+
+## 概要
+
+このWebページでは JuliaTokai 19 で話す資料・リンクを格納する.
+
+- [slide](slide/slide.qmd)
+  - C++ で記述された既存の資源を Julia から使う方法，Juliaで作った資源を C++  のコードに埋め込む方法を紹介する．
+
+## その他
+
+- このページは [Quarto](https://quarto.org/) を使って構築されている．`qmd` ファイルは [こちら](https://github.com/AtelierArith/cxx_et_julia) で管理されている．読者は教育・研究目的であれば自由に使用ができる．

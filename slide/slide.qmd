@@ -1,0 +1,72 @@
+---
+title: C++ と Julia を連携する
+author: SatoshiTerasaki@AtelierArith
+format:
+  revealjs:
+    theme: "black"
+    # css: "../styles/style.css"
+    embed-resources: true
+    slide-number: true
+    show-notes: separate-page
+    mermaid:
+      theme: default
+    gfm:
+    mermaid-format: png
+---
+
+## 概要
+
+C++ の資源，Julia の資源を相互に活用する例を紹介する
+
+---
+
+### 背景
+
+- プログラミング言語は Julia は高速かつ柔軟なプログラムを書くことが可能
+  - 「Python でプロトタイプを書いて後で C++ で実装し直す」という手間を省くことができる（two-language problem の解消が可能)
+  - 高速な実装を素早く作ることができる
+
+- 一方で Julia は後発の言語であるため欲しい機能が他の言語にあるが Julia にないこともある．
+  - よく知られているライブラリを Julia から使いたいぞ
+  - C++ の文脈で言えば Eigen, OpenCV はその典型的な例
+  - 可能なら C/C++ から Julia を使いたいぞ
+
+---
+
+### 過去のライブラリ
+
+昔から多くのライブラリが作られていたが動かない・メンテナンスが止まってるものたち．
+
+- [timholy/Cpp.jl](https://github.com/timholy/Cpp.jl)
+- [JuliaInterop/Cxx.jl](https://github.com/JuliaInterop/Cxx.jl)
+- [eschnett/CxxInterface.jl](https://github.com/eschnett/CxxInterface.jl)
+- [jw3126/CxxCall.jl](https://github.com/jw3126/CxxCall.jl)
+
+コミュニティベースで開発されてるからしょうがない...
+
+---
+
+### 2024 年時点で手元で動いているライブラリ
+
+- [Clemapfel/jluna](https://github.com/Clemapfel/jluna)
+- [JuliaInterop/CxxWrap.jl](https://github.com/JuliaInterop/CxxWrap.jl)
+- [JuliaInterop/libcxxwrap-julia](https://github.com/JuliaInterop/libcxxwrap-julia)
+- [grasph/wrapit](https://github.com/grasph/wrapit)
+- [grasph/WrapIt.jl](https://github.com/grasph/WrapIt.jl)
+
+---
+
+# Appendix
+
+お役立ち資料
+
+---
+
+## C++ に関する Web 上の資料
+
+- [cpprefjp - C++日本語リファレンス](https://cpprefjp.github.io)
+- [IDA Kenichiro, ゼロから学ぶ C++](https://rinatz.github.io/cpp-book/)
+- [kaityo256, python2cpp/header/README.md](https://github.com/kaityo256/python2cpp/blob/main/header/README.md)
+- [CMake Tutorial](https://cmake.org/cmake/help/book/mastering-cmake/cmake/Help/guide/tutorial/index.html#id1)
+- [@shohirose(広瀬 翔), CMakeの使い方（その１）, Qiita](https://qiita.com/shohirose/items/45fb49c6b429e8b204ac)
+
