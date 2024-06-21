@@ -4,7 +4,7 @@ author: SatoshiTerasaki@AtelierArith
 format:
   revealjs:
     theme: "black"
-    # css: "../styles/style.css"
+    css: "../styles/style.css"
     embed-resources: true
     slide-number: true
     show-notes: separate-page
@@ -16,13 +16,15 @@ format:
 
 ## 概要
 
-C++ の資源，Julia の資源を相互に活用する例を紹介する
+- C++ の資源，Julia の資源を相互に活用する例を紹介する
+- 例はいくつか作っている
+- C++ 詳しい人参入お待ちしてます
 
 ---
 
 ### 背景
 
-- プログラミング言語は Julia は高速かつ柔軟なプログラムを書くことが可能
+- Julia は高速かつ柔軟なプログラムを記述できる
   - 「Python でプロトタイプを書いて後で C++ で実装し直す」という手間を省くことができる（two-language problem の解消が可能)
   - 高速な実装を素早く作ることができる
 
@@ -46,27 +48,641 @@ C++ の資源，Julia の資源を相互に活用する例を紹介する
 
 ---
 
-### 2024 年時点で手元で動いているライブラリ
+### 手元で動いているライブラリ(1)
+
+2024 年時点で自分の手元 (Linux/macOS) で動いているもの
 
 - [Clemapfel/jluna](https://github.com/Clemapfel/jluna)
-- [JuliaInterop/CxxWrap.jl](https://github.com/JuliaInterop/CxxWrap.jl)
-- [JuliaInterop/libcxxwrap-julia](https://github.com/JuliaInterop/libcxxwrap-julia)
-- [grasph/wrapit](https://github.com/grasph/wrapit)
+  - Julia が持っている C-API をモダンな C++ の機能でラップした機能を提供
+
+> `It uses C++20 features extensively and aims to support the newest Julia version, rather than focusing on backwards compatibility.`
+
+---
+
+### 手元で動いているライブラリ(2)
+
+2024 年時点で自分の手元 (Linux/macOS) で動いているもの
+
+- [JuliaInterop/CxxWrap.jl](https://github.com/JuliaInterop/CxxWrap.jl) 
+  - C++ の機能を Julia から使えるようにするライブラリ
+  - [JuliaInterop/libcxxwrap-julia](https://github.com/JuliaInterop/libcxxwrap-julia) とセットで使う
+
+今日はこっちを話す
+
+---
+
+### CxxWrap.jl を用いたアプリケーション
+
+- [JuliaImages/OpenCV.jl](https://github.com/JuliaImages/OpenCV.jl)
+- [oscar-system/Polymake.jl](https://github.com/oscar-system/Polymake.jl)
 - [grasph/WrapIt.jl](https://github.com/grasph/WrapIt.jl)
+  - CxxWrap.jl では C++ の機能を使うためのラッパー関数を手動で書かなければいけない．その自動化を試みている
+  - [grasph/wrapit](https://github.com/grasph/wrapit)
+  - [Geant4.jl](https://github.com/JuliaHEP/Geant4.jl) がその成功例
+
+---
+
+## ここからは CxxWrap.jl 入門
+
+- 教材:
+  - https://github.com/terasakisatoshi/cmake-playground
+    - CMake のお勉強のために作ったもの
+
+---
+
+### 用意するもの
+
+- C++17 をサポートするコンパイラ (CxxWrap.jl の要請)
+- Julia (今回は v1.10 を使う)
+- C++ のコード
+  - ビルドができるぐらいマトモに動作してる C++ プロジェクトと環境
+  - Docker が便利
+- 人間
+  - 使いたい関数に対して MWE (Minimal working examples) が作れる程度の C++ 能力
+  - シェルスクリプト, Make, CMake を扱う能力
+    - `bash`, `make`, `cmake`
+  - segmentation fault (core dumped) に折れない心
+    - very important(重要)
+
+---
+
+### CxxWrap.jl のインストール
+
+```julia
+julia> using Pkg; Pkg.add("CxxWrap")
+```
+
+- Julia から C++ の機能を使うための呪文(マクロ)を使うことができる
+- ビルド済み `https://github.com/JuliaInterop/libcxxwrap-julia` を利用できる
+
+---
+
+### ワークフロー
+
+- C++ のコードを用意
+- C++ と Julia をつなげるためのコードを用意
+- ビルド
+- Julia 側の整備
+- テスト
+  - 入出力が C++ の時の結果と Julia での結果が崩れてないか
+
+---
+
+### C++ のコード
+
+受け取った文字列をそのまま返す関数
+
+```cpp
+#include<string>
+
+std::string greet(std::string msg)
+{
+   return msg;
+}
+```
+
+---
+
+### すぐ使いたい人向け
+
+```bash
+git clone https://github.com/terasakisatoshi/cmake-playground.git
+cd cmake-playground/cxxwrap1
+docker build -t cxxwrap1 .
+docker run --rm -it -v $PWD:/work -w /work cxxwrap1 bash -c 'bash build.sh && julia callcxx.jl'
+```
+
+下記のようなログが出力されればOK
+
+```console
+＜色々ビルドのログが流れる＞
+Test Summary: | Pass  Total  Time
+greet         |    1      1  0.0s
+```
+
+---
+
+### `greet` 関数をラップする
+
+下記のような C++ コードを用意する
+
+```cpp
+// hello.cpp
+#include <string>
+
+#include "jlcxx/jlcxx.hpp"
+
+std::string greet(std::string msg)
+{
+   return msg;
+}
+
+JLCXX_MODULE define_julia_module(jlcxx::Module& mod)
+{
+  // mod.method("<Julia 側から見た関数名>", &<C++ 側の関数>);
+  // & は C++ における参照渡しの文法を使うための記号．
+  mod.method("greet", &greet);
+}
+```
+
+---
+
+### ビルドする
+
+```sh
+# build.sh の一部改変
+SHARED_LIB_EXT=".so" # Linux
+SHARED_LIB_EXT=".dylib" # Apple
+# Get Julia installation paths
+rm Manifest.toml
+julia --project -e 'using Pkg; Pkg.instantiate()'
+JL=`julia --project -e 'joinpath(Sys.BINDIR, "..") |> abspath |> print'`
+PREFIX=`julia --project -e 'using CxxWrap; CxxWrap.prefix_path() |> print'`
+
+# Build shared library with appropriate extension
+g++ -fPIC -shared -std=c++17 \
+  -I${PREFIX}/include/ \
+  -L${PREFIX}/lib/ \
+  -I${JL}/include/julia \
+  -L${JL}/lib \
+  -ljulia -lcxxwrap_julia hello.cpp -o libhello${SHARED_LIB_EXT}
+```
+
+- `-I` でヘッダーファイルのパスを指定する
+  - 関数の宣言を取得
+  - `julia.h`, `jlcxx/jlcxx.hpp` を使うため
+- `-L` でライブラリのパスを指定する
+  - 関数の定義を取得
+  - `libjulia`, `libcxxwrap_julia` とリンクするため
+
+---
+
+### `bash build.sh` による生成物 
+
+- `libhello<拡張子>` が生成される. 
+- `.so`, `.dylib`, `.dll` など
+Julia 側からはこの共有ライブラリを実行時に読み込む
+
+---
+
+### Julia 側から使う
+
+```julia
+using Test
+
+# Load the module and generate the functions
+module CppHello
+using Libdl: dlext
+
+using CxxWrap
+@wrapmodule(() -> joinpath(".", "libhello.$(dlext)"))
+
+# この時点で `greet` という Julia としての関数が定義されている
+
+function __init__()
+    # この呪文を忘れると実行時に Segmentation fault が生じる
+    @initcxx
+end
+
+end # module
+```
+
+- `CppHello` モジュールの中に `greet` という関数が定義される
+- 下記のようにテストをする
+
+```julia
+@testset "greet" begin
+    # Call greet and show the result
+    @test CppHello.greet("Hello World") == "Hello World"
+end
+```
+
+---
+
+### ワークフローの改善
+
+- C++ のコードを用意
+- C++ と Julia をつなげるためのコードを用意
+- ビルド（**ここが一番しんどい**）
+- Julia 側の整備
+- テスト
+- みんなに使ってらう
+
+#### ビルド（**ここが一番しんどい**）
+
+- 大事なことなので２回言いました
+
+- プラクティカルな例（大規模なC++プロジェクト）をラップする際，CMake(ソースコードのビルド管理ツール) と仲良くすることになる．
+  - `CMakeLists.txt`, `cmake ..` みたいなやつ. 見たことあるでしょ？それです．
+  - `cmake-playground/cxxwrap2` を見てね
+---
+
+### `CMakeLists.txt` 
+
+```cmake
+cmake_minimum_required(VERSION 3.15)
+project(cxxwrap2)
+# とりあえず書いておく
+find_package(JlCxx)
+get_target_property(JlCxx_location JlCxx::cxxwrap_julia LOCATION)
+get_filename_component(JlCxx_location ${JlCxx_location} DIRECTORY)
+
+# 皆さんが触る箇所はここ
+# hello という共有ライブラリを作るためのターゲットを定義
+add_library(hello SHARED hello.cpp)
+
+message(STATUS "Found JlCxx at ${JlCxx_location}")
+
+# hello というターゲットは何に依存しているか（リンクすべきか）を記述
+target_link_libraries(hello JlCxx::cxxwrap_julia)
+```
+
+- cxxwrap1 の例では `jlcxx/jlcxx.hpp`, `julia.h` をインクルードするためのディレクトリを指定する必要があった
+  - `hello.cpp` をコンパイルするために表面上見えない `julia.h` の場所を知る必要があった
+- 今回の場合そういった情報を `JlCxx::cxxwrap_julia` に押し付けることができる．[ここ](https://github.com/JuliaInterop/libcxxwrap-julia/blob/ca848c7dd8d0c1793040b01269c87282cfba9614/CMakeLists.txt#L135-L144) を参照
+
+---
+
+### ビルド
+
+- `cmake` コマンドでビルドができる
+- `find_package(JlCxx)` によって C++ パッケージ [`JlCxx`](https://github.com/JuliaInterop/libcxxwrap-julia/blob/main/CMakeLists.txt) の情報を取得することができる．
+  - それはどこ？ `CXXWRAP_PREFIX` で指定
+  - cmake にその情報を伝えるには？
+    - `-DCMAKE_PREFIX_PATH` オプションで指定
+    - または `export CMAKE_PREFIX_PATH=...` のようにして環境変数で定義
+
+```sh
+# Get Julia installation paths
+CXXWRAP_PREFIX=`julia --project -e 'using CxxWrap; CxxWrap.prefix_path() |> print'`
+cmake -S . -B ./build -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$CXXWRAP_PREFIX
+cmake --build ./build --config Release -j `nproc`
+```
+
+- `./build/libhello<拡張子>` が出来上がる．
+- Julia 側はそのパスを指定するように修正すれば良い
+
+---
+
+#### ワークフローの改善
+
+`cmake-playground/cxxwrap4` では Julia の標準のディレクトリ構造を採用している
+
+- `./deps` ディレクトリに Julia パッケージのビルドをする際のスクリプト・ソースコードを配置する
+
+```console
+$ tree cmake-playground/cxxwrap4
+├── Project.toml
+├── deps
+│   ├── CMakeLists.txt
+│   ├── build.jl
+│   ├── build.sh
+│   └── src
+│       ├── CMakeLists.txt
+│       └── hello.cpp
+├── src
+│   └── MyCxxWrap4.jl
+└── test
+    └── runtests.jl
+```
+
+---
+
+### Julia パッケージのビルド
+
+- `julia> using Pkg; Pkg.build()` で Julia パッケージのビルドができる
+- `Pkg.build()` は Julia スクリプト `deps/build.jl` を実行する.
+
+例えば `cmake-playground/cxxwrap4` では次のようにしている
+
+```julia
+# build.jl
+run(`bash build.sh`)
+```
+
+- もう少し↑をスマートにできないものか？
+- [JuliaPackaging/CMake.jl](https://github.com/JuliaPackaging/CMake.jl) は 3.15 系のものを使うようになっている
+- 最新の cmake を使いたい人は [JuliaBinaryWrappers/CMake_jll.jl](https://github.com/JuliaBinaryWrappers/CMake_jll.jl) を使うべきかもしれない（？）
+
+---
+
+### ワークフローの改善
+
+- C++ のコードを用意
+- C++ と Julia をつなげるためのコードを用意
+- ビルド (`cmake`)
+- Julia 側の整備 (`./deps` に)
+- テスト
+- みんなに使ってらう(<-- ここをどうするか？)
+
+---
+
+### ビルド済みライブラリの提供
+
+Julia のインターフェースしか興味ない人・環境に対してローカルでビルドさせるのはしんどい（環境構築の学習コストが高い）BinaryBuilder.jl を使えば `LibHello_jll` のように事前ビルド済みの JLL packages (a pun on "Dynamic-Link Library", with the J standing for Julia) パッケージを提供すれば良い
+
+- [ビルド環境](https://github.com/terasakisatoshi/LibHelloBuilder.jl)
+- [ビルド済み JLL 置き場](https://github.com/terasakisatoshi/libhello_jll.jl)
+- [JLL を使う Julia パッケージ](https://github.com/terasakisatoshi/LibHello.jl)
+
+↑メンテしてないけれどコンセプトは今でも通じるところはある（はず）
+
+---
+
+### ラッパーの例
+
+- `C++ と Julia をつなげるためのコードを用意` ここをどうするか
+- 数値計算の文脈だと配列を渡して配列を返すプログラムが書ければ良いけれど
+気軽に試せる例が少ない...
+
+- というわけで [cmake-playground/cxxwrap6](https://github.com/terasakisatoshi/cmake-playground/blob/main/cxxwrap6/deps/src/hello.cpp)
+- `double(C++), Float64(Julia)` の要素を持つ配列(1, 2 次元配列)に対して演算を施す例を作った．
+- テンプレートを使っている関数をラップする方法誰か教えてください
+
+---
+
+### Julia の配列を渡して上書きする例
+
+要素を二倍にする例
+
+```cpp
+void inplace_twice(jlcxx::ArrayRef<double, 2> jlx) {
+  for (size_t i = 0; i < jlx.size(); i++) {
+    jlx[i] = 2 * jlx[i];
+  }
+}
+```
+
+対応する Julia の関数を呼び出すと二次元配列の各要素が二倍になる
+
+---
+
+### 配列を返す
+
+CxxWrap.jl の README.md にある [Const arrays](https://github.com/JuliaInterop/CxxWrap.jl?tab=readme-ov-file#const-arrays) を参照
+
+```cpp
+const double* const_vector()
+{
+  // static キーワードが重要
+  static double d[] = {1., 2., 3};
+  return d;
+}
+
+const double* const_matrix()
+{
+  // static キーワードが重要
+  static double d[2][3] = {{1., 2., 3}, {4., 5., 6.}};
+  return &d[0][0];
+}
+
+// ...module definition skipped...
+
+mymodule.method("const_vector", []() { return jlcxx::make_const_array(const_vector(), 3); });
+mymodule.method("const_matrix", []() { return jlcxx::make_const_array(const_matrix(), 3, 2); });
+```
+
+↑の例だと固定長・固定サイズしか扱えなさそう？
+
+動的なサイズを返したいぞ？
+
+---
+
+- [Returning a Julia array](https://github.com/JuliaInterop/CxxWrap.jl?tab=readme-ov-file#returning-a-julia-array) がランタイム時にセグフォするんだが．．．？
+
+```cpp
+// これは実行時にセグフォする. 辛い
+mymodule.method("array", [] () {
+    jlcxx::Array<int> data{ };
+    data.push_back(1);
+    data.push_back(2);
+    data.push_back(3);
+
+    return data;
+});
+```
+
+- `std::vector` は返すことができた. Julia 側からは `AbstractVector` のサブタイプである `CxxWrap.StdVector` のインスタンスとして取得できる．
+
+```cpp
+// これはできてる
+std::vector<double> create_stdvec(int N){
+  std::vector<double> v;
+  for (size_t i = 0; i < N; i++){
+    v.push_back(i);
+  }
+  return v;
+}
+```
+
+---
+
+### 例: 要素を 3 倍にする関数
+
+行列であれば `static Eigen::MatrixXd y;` を宣言して y に値を格納する方法を採用すればできた．
+
+```cpp
+#include <Eigen/Dense>
+
+// 要素を 3 倍にする
+auto triple(jlcxx::ArrayRef<double, 2> jlx) {
+  size_t size0 = jl_array_dim(jlx.m_array, 0);
+  size_t size1 = jl_array_dim(jlx.m_array, 1);
+  // static キーワードをつけなければいけない
+  static Eigen::MatrixXd y;
+  auto x = Eigen::Map<Eigen::MatrixXd>(jlx.data(), size0, size1);
+  // Do something
+  y = 2 * x + x;
+  return jlcxx::make_julia_array(y.data(), size0, size1);
+}
+```
+
+異なるサイズを持つ `x::Matrix{Float64}` を入力として受け付けることができている
+
+```julia
+using MyCxxWrap6
+x = rand(5, 5)
+v = triple(x)
+@assert v == 3x
+x = rand(10, 10)
+v = triple(x)
+@assert v == 3x
+```
+
+---
+
+### 前のページの補足
+
+- 前のページは Eigen に依存している．でも色々都合が良い
+- Eigen を使っているライブラリをラップする分には問題ない
+- Eigen のメモリレイアウトは Colum major らしいので
+
+```cpp
+auto x = Eigen::Map<Eigen::MatrixXd>(jlx.data(), size0, size1);
+```
+
+のように Julia のデータ `jlx` が持っている数値データを C++ 側にスムーズに渡せる.
+
+Const Arrays の例の場合 Julia 側は 3x2 行列として理解される
+
+```cpp
+const double* const_matrix()
+{
+  // static キーワードが重要
+  static double d[2][3] = {{1., 2., 3}, {4., 5., 6.}};
+  return &d[0][0];
+}
+```
+
+---
+
+### 前のページの補足
+
+列に関するループ変数 `c` を先に回さないと直感的な結果を出力できない
+
+```julia
+void f(jlcxx::ArrayRef<double, 2> jlx) {
+  size_t size0 = jl_array_dim(jlx.m_array, 0);
+  size_t size1 = jl_array_dim(jlx.m_array, 1);
+
+  std::cout << "[";
+  for(size_t r = 0; r < size0; r++){
+    for(size_t c = 0; c < size1; c++){
+      std::cout << jlx[r + size0 * c];
+      if (c == size1 - 1){
+        if (r != size0 - 1){
+          std::cout << "; ";
+        }
+      } else {
+        std::cout << " ";
+      }
+    }
+  }
+   std::cout << "]";
+   std::cout << std::endl;
+}
+```
+
+---
+
+### C++ 側の型をそのまま返したい
+
+今までの例は便利ではあるが，C++ 側のクラスを返す関数に対応できない
+
+```cpp
+// この機能を持つ C++ 関数を Julia 側から利用したい
+Eigen::MatrixXd example1(Eigen::MatrixXd x){
+  return 3 * x;
+}
+```
+
+`mod.add_type` を使ってできる
+
+---
+
+### EasyEigenInterface.jl
+
+下記が Julia のコードとして実行できる
+
+```julia
+using EasyEigenInterface
+x = rand(3,3)
+m = MatrixXd(x)
+@assert EasyEigenInterface.example1(m) == 3x
+```
+
+- ラッパーを作っているところはこちら [EasyEigenInterface.jl/deps/src/jl_easy_eigen_interface.cpp](https://github.com/AtelierArith/EasyEigenInterface.jl/blob/main/deps/jl_easy_eigen_interface.cpp)
+
+- 作ったのは良いが, `EasyEigenInterface.jl` で対応づけた MatrixXd 型を他の Julia ライブラリで活用する方法がわからない... 
+  - CxxWrap.StdVector みたいなことができていない...
+  - CxxWrap.jl の StdVector のコードを読めば良いと思うがその時間が取れていない
+- いわゆる「ボクが作ったサイツヨオレオレ実装」にとどまっている．
+
+---
+
+### そろそろ辛くなってきた
+
+- 特定の機能だけを使いたい場合は人間がヘッダーファイルを眺めて書けば良い
+  - ただスケールしない．自分のスキル不足で自動化できてない
+- OpenCV.jl どうしてるんだろう・・・？
+
+---
+
+### WrapIt
+
+まだ十分試しきれてないが Geant4 という高エネルギー物理の C++ 実装はラッパー関数を自動生成しているらしい
+
+- CERN でのスライド [Geant4.jl - New Interface to
+Simulation Applications](https://indico.cern.ch/event/1307331/contributions/5593649/attachments/2722696/4730700/Geant4.jl-20230928.pdf)
+
+{{< video https://www.youtube.com/watch?v=hr0naOrT8B4 >}}
+
+{{< video https://www.youtube.com/watch?v=9amNI1-x7Y4 >}}
+
+なんかよくわからないけれどすごそう（小並感）
+時間がなかったので誰か解説書いてほしい
+
+---
+
+### まとめ
+
+C++ Julia CxxWrap.jl の
 
 ---
 
 # Appendix
 
-お役立ち資料
+---
+
 
 ---
 
-## C++ に関する Web 上の資料
+#### その他色々作ったもの（時間があったら試してね！）
+
+  - https://github.com/AtelierArith/CxxRandomLogo
+    - RandomLogos.jl の C++ 実装を作って Julia C++ から利用できるようにしたもの
+    - Julia の 2倍程度高速になった
+  - https://github.com/AtelierArith/EasyEigenInterface.jl
+    - Eigen の一部のデータをラップしたもの．オレオレ実装
+  - https://github.com/AtelierArith/embedding-julia
+    - C-API の例
+  - https://github.com/terasakisatoshi/jldev_jluna
+    - jluna のセットアップを Docker で行ったもの
+  - https://github.com/terasakisatoshi/MyCling.jl
+    - C++ Jupyter カーネル（Jupyter で C++ を扱えるエコシステム）をインストールする手順を紹介
+
+---
+
+## C++ には興味がないが C には興味がある人へ
+
+おめでとうございます．このスライドを読む必要は全くありません．[Clang.jl](https://github.com/JuliaInterop/Clang.jl) を使いましょう．
+
+Clang.jl を使って binding を作った例
+
+[libqrean](https://github.com/kikuchan/libqrean) をフォークしたもの
+  - https://github.com/terasakisatoshi/libqrean/tree/julia/LibQREAN
+
+---
+
+### Go (programming language) に興味がある人は
+
+```
+go build -buildmode=c-shared -o export.so
+```
+
+とすれば `export.h` を作ってくれる．Clang.jl と合わせ技でいい感じのものが作れそう？
+
+- https://github.com/terasakisatoshi/gat/blob/terasaki/julia-api/main.go
+- https://github.com/terasakisatoshi/gat/blob/terasaki/julia-api/main.jl
+
+---
+
+## C++ に関する Web 上の役立つ資料
 
 - [cpprefjp - C++日本語リファレンス](https://cpprefjp.github.io)
 - [IDA Kenichiro, ゼロから学ぶ C++](https://rinatz.github.io/cpp-book/)
 - [kaityo256, python2cpp/header/README.md](https://github.com/kaityo256/python2cpp/blob/main/header/README.md)
 - [CMake Tutorial](https://cmake.org/cmake/help/book/mastering-cmake/cmake/Help/guide/tutorial/index.html#id1)
+- [termoshtt, cmake tutorial](https://zenn.dev/termoshtt/books/cmake-tutorial)
 - [@shohirose(広瀬 翔), CMakeの使い方（その１）, Qiita](https://qiita.com/shohirose/items/45fb49c6b429e8b204ac)
-
+- [dc1394/cppcode_matome](https://github.com/dc1394/cppcode_matome)
