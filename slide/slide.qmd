@@ -208,6 +208,10 @@ g++ -fPIC -shared -std=c++17 \
   -ljulia -lcxxwrap_julia hello.cpp -o libhello${SHARED_LIB_EXT}
 ```
 
+---
+
+### コンパイルオプションについて
+
 - `-I` でヘッダーファイルのパスを指定する
   - 関数の宣言を取得
   - `julia.h`, `jlcxx/jlcxx.hpp` を使うため
@@ -228,8 +232,6 @@ Julia 側からはこの共有ライブラリを実行時に読み込む
 ### Julia 側から使う
 
 ```julia
-using Test
-
 # Load the module and generate the functions
 module CppHello
 using Libdl: dlext
@@ -247,10 +249,16 @@ end
 end # module
 ```
 
+---
+
+### Julia パッケージのテスト
+
 - `CppHello` モジュールの中に `greet` という関数が定義される
 - 下記のようにテストをする
 
 ```julia
+using Test
+
 @testset "greet" begin
     # Call greet and show the result
     @test CppHello.greet("Hello World") == "Hello World"
@@ -268,6 +276,8 @@ end
 - テスト
 - みんなに使ってらう
 
+---
+
 #### ビルド（**ここが一番しんどい**）
 
 - 大事なことなので２回言いました
@@ -275,6 +285,7 @@ end
 - プラクティカルな例（大規模なC++プロジェクト）をラップする際，CMake(ソースコードのビルド管理ツール) と仲良くすることになる．
   - `CMakeLists.txt`, `cmake ..` みたいなやつ. 見たことあるでしょ？それです．
   - `cmake-playground/cxxwrap2` を見てね
+
 ---
 
 ### `CMakeLists.txt` 
@@ -296,6 +307,10 @@ message(STATUS "Found JlCxx at ${JlCxx_location}")
 # hello というターゲットは何に依存しているか（リンクすべきか）を記述
 target_link_libraries(hello JlCxx::cxxwrap_julia)
 ```
+
+---
+
+### CMake を使うメリット
 
 - cxxwrap1 の例では `jlcxx/jlcxx.hpp`, `julia.h` をインクルードするためのディレクトリを指定する必要があった
   - `hello.cpp` をコンパイルするために表面上見えない `julia.h` の場所を知る必要があった
@@ -479,7 +494,7 @@ std::vector<double> create_stdvec(int N){
 
 ### 例: 要素を 3 倍にする関数
 
-行列であれば `static Eigen::MatrixXd y;` を宣言して y に値を格納する方法を採用すればできた．
+- 行列であれば `static Eigen::MatrixXd y;` を宣言して y に値を格納する方法を採用すればできた．
 
 ```cpp
 #include <Eigen/Dense>
@@ -497,7 +512,11 @@ auto triple(jlcxx::ArrayRef<double, 2> jlx) {
 }
 ```
 
-異なるサイズを持つ `x::Matrix{Float64}` を入力として受け付けることができている
+---
+
+### 例: 要素を 3 倍にする関数
+
+- 異なるサイズを持つ `x::Matrix{Float64}` を入力として受け付けることができている
 
 ```julia
 using MyCxxWrap6
@@ -626,14 +645,11 @@ Simulation Applications](https://indico.cern.ch/event/1307331/contributions/5593
 
 ### まとめ
 
-C++ Julia CxxWrap.jl の
+- C++ Julia CxxWrap.jl の使い方を書きました
 
 ---
 
 # Appendix
-
----
-
 
 ---
 
