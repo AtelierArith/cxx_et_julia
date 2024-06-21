@@ -1,5 +1,5 @@
 ---
-title: "C++ と Julia を往復する話. 於 JuliaTokai 19"
+title: "忙しい人のための C++/Julia 連携. 於 JuliaTokai 19"
 ---
 
 ## 概要
