@@ -4,14 +4,14 @@
     "href": "index.html",
     "title": "忙しい人のための C++/Julia 連携. 於 JuliaTokai 19",
     "section": "",
-    "text": "このWebページでは JuliaTokai 19 で話す資料・リンクを格納する.\n\nslide\n\nC++ で記述された既存の資源を Julia から使う方法，Juliaで作った資源を C++ のコードに埋め込む方法を紹介する．"
+    "text": "このWebページでは JuliaTokai 19 で話す資料・リンクを格納する.\n\nslide\n\nC++ で記述された既存の資源を Julia から使う方法，Juliaで作った資源を C++ のコードに埋め込む方法を紹介する．\n\nslide (EN)\n\nWe will show how to use existing resources written in C++ from Julia, and how to embed resources created in Julia into C++ code.\nThis slide is traslated from slide above via ChatGPT API using chagtpt-md-translator"
   },
   {
     "objectID": "index.html#概要",
     "href": "index.html#概要",
     "title": "忙しい人のための C++/Julia 連携. 於 JuliaTokai 19",
     "section": "",
-    "text": "このWebページでは JuliaTokai 19 で話す資料・リンクを格納する.\n\nslide\n\nC++ で記述された既存の資源を Julia から使う方法，Juliaで作った資源を C++ のコードに埋め込む方法を紹介する．"
+    "text": "このWebページでは JuliaTokai 19 で話す資料・リンクを格納する.\n\nslide\n\nC++ で記述された既存の資源を Julia から使う方法，Juliaで作った資源を C++ のコードに埋め込む方法を紹介する．\n\nslide (EN)\n\nWe will show how to use existing resources written in C++ from Julia, and how to embed resources created in Julia into C++ code.\nThis slide is traslated from slide above via ChatGPT API using chagtpt-md-translator"
   },
   {
     "objectID": "index.html#その他",
@@ -47,5 +47,33 @@
     "title": "C++ と Julia を連携する",
     "section": "C++ に関する Web 上の役立つ資料",
     "text": "C++ に関する Web 上の役立つ資料\n\ncpprefjp - C++日本語リファレンス\nIDA Kenichiro, ゼロから学ぶ C++\nkaityo256, python2cpp/header/README.md\nCMake Tutorial\ntermoshtt, cmake tutorial\n@shohirose(広瀬 翔), CMakeの使い方（その１）, Qiita\ndc1394/cppcode_matome"
+  },
+  {
+    "objectID": "slide/slide_en.html#overview",
+    "href": "slide/slide_en.html#overview",
+    "title": "Integrating C++ and Julia",
+    "section": "Overview",
+    "text": "Overview\n\nIntroduce examples of utilizing resources of C++ and Julia mutually\nSeveral examples have been created\nWe welcome the participation of those who are knowledgeable in C++"
+  },
+  {
+    "objectID": "slide/slide_en.html#introduction-to-cxxwrap.jl-from-here",
+    "href": "slide/slide_en.html#introduction-to-cxxwrap.jl-from-here",
+    "title": "Integrating C++ and Julia",
+    "section": "Introduction to CxxWrap.jl from here",
+    "text": "Introduction to CxxWrap.jl from here\n\nTeaching materials:\n\nhttps://github.com/terasakisatoshi/cmake-playground\n\nCreated for studying CMake"
+  },
+  {
+    "objectID": "slide/slide_en.html#for-those-who-are-not-interested-in-c-but-are-interested-in-c",
+    "href": "slide/slide_en.html#for-those-who-are-not-interested-in-c-but-are-interested-in-c",
+    "title": "Integrating C++ and Julia",
+    "section": "For those who are not interested in C++ but are interested in C",
+    "text": "For those who are not interested in C++ but are interested in C\nCongratulations. You don’t need to read this slide at all. Let’s use Clang.jl.\nExample of creating bindings using Clang.jl\nForked from libqrean - https://github.com/terasakisatoshi/libqrean/tree/julia/LibQREAN"
+  },
+  {
+    "objectID": "slide/slide_en.html#useful-resources-on-the-web-about-c",
+    "href": "slide/slide_en.html#useful-resources-on-the-web-about-c",
+    "title": "Integrating C++ and Julia",
+    "section": "Useful resources on the web about C++",
+    "text": "Useful resources on the web about C++\n\ncpprefjp - C++ Japanese Reference\nIDA Kenichiro, Learning C++ from scratch\nkaityo256, python2cpp/header/README.md\nCMake Tutorial\ntermoshtt, cmake tutorial\n@shohirose (Sho Hirose), How to use CMake (Part 1), Qiita\ndc1394/cppcode_matome\n\nIt looks like you haven’t pasted the Markdown content yet. Please provide the text you want translated, and I’ll get started on it right away."
   }
 ]

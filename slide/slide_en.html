@@ -444,7 +444,7 @@
   <meta name="generator" content="quarto-1.4.556">
 
   <meta name="author" content="SatoshiTerasaki@AtelierArith">
-  <title>忙しい人のための C++/Julia 連携 - C++ と Julia を連携する</title>
+  <title>忙しい人のための C++/Julia 連携 - Integrating C++ and Julia</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -1221,7 +1221,7 @@ margin-right: 0; }
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">C++ と Julia を連携する</h1>
+  <h1 class="title">Integrating C++ and Julia</h1>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -1232,51 +1232,51 @@ SatoshiTerasaki@AtelierArith
 </div>
 
 </section>
-<section id="概要" class="slide level2">
-<h2>概要</h2>
+<section id="overview" class="slide level2">
+<h2>Overview</h2>
 <ul>
-<li>C++ の資源，Julia の資源を相互に活用する例を紹介する</li>
-<li>例はいくつか作っている</li>
-<li>C++ 詳しい人参入お待ちしてます</li>
+<li>Introduce examples of utilizing resources of C++ and Julia mutually</li>
+<li>Several examples have been created</li>
+<li>We welcome the participation of those who are knowledgeable in C++</li>
 </ul>
 </section>
 <section class="slide level2">
 
-<h3 id="背景">背景</h3>
+<h3 id="background">Background</h3>
 <ul>
-<li>Julia は高速かつ柔軟なプログラムを記述できる
+<li>Julia allows for writing fast and flexible programs
 <ul>
-<li>「Python でプロトタイプを書いて後で C++ で実装し直す」という手間を省くことができる（two-language problem の解消が可能)</li>
-<li>高速な実装を素早く作ることができる</li>
+<li>It can eliminate the need to “write a prototype in Python and later reimplement it in C++” (solving the two-language problem)</li>
+<li>Enables quick creation of high-speed implementations</li>
 </ul></li>
-<li>一方で Julia は後発の言語であるため欲しい機能が他の言語にあるが Julia にないこともある．
+<li>On the other hand, since Julia is a newer language, there are features available in other languages that are not yet in Julia.
 <ul>
-<li>よく知られているライブラリを Julia から使いたいぞ</li>
-<li>C++ の文脈で言えば Eigen, OpenCV はその典型的な例</li>
-<li>可能なら C/C++ から Julia を使いたいぞ</li>
+<li>Want to use well-known libraries from Julia</li>
+<li>In the context of C++, Eigen and OpenCV are typical examples</li>
+<li>If possible, want to use Julia from C/C++</li>
 </ul></li>
 </ul>
 </section>
 <section class="slide level2">
 
-<h3 id="過去のライブラリ">過去のライブラリ</h3>
-<p>昔から多くのライブラリが作られていたが動かない・メンテナンスが止まってるものたち．</p>
+<h3 id="past-libraries">Past Libraries</h3>
+<p>Many libraries have been created in the past but are no longer functional or maintained.</p>
 <ul>
 <li><a href="https://github.com/timholy/Cpp.jl">timholy/Cpp.jl</a></li>
 <li><a href="https://github.com/JuliaInterop/Cxx.jl">JuliaInterop/Cxx.jl</a></li>
 <li><a href="https://github.com/eschnett/CxxInterface.jl">eschnett/CxxInterface.jl</a></li>
 <li><a href="https://github.com/jw3126/CxxCall.jl">jw3126/CxxCall.jl</a></li>
 </ul>
-<p>コミュニティベースで開発されてるからしょうがない…</p>
+<p>It’s inevitable since they are community-based developments…</p>
 </section>
 <section class="slide level2">
 
-<h3 id="手元で動いているライブラリ1">手元で動いているライブラリ(1)</h3>
-<p>2024 年時点で自分の手元 (Linux/macOS) で動いているもの</p>
+<h3 id="libraries-working-locally-1">Libraries Working Locally (1)</h3>
+<p>Libraries that are working on my local machine (Linux/macOS) as of 2024</p>
 <ul>
 <li><a href="https://github.com/Clemapfel/jluna">Clemapfel/jluna</a>
 <ul>
-<li>Julia が持っている C-API をモダンな C++ の機能でラップした機能を提供</li>
+<li>Provides functionality that wraps Julia’s C-API with modern C++ features</li>
 </ul></li>
 </ul>
 <blockquote>
@@ -1285,95 +1285,95 @@ SatoshiTerasaki@AtelierArith
 </section>
 <section class="slide level2">
 
-<h3 id="手元で動いているライブラリ2">手元で動いているライブラリ(2)</h3>
-<p>2024 年時点で自分の手元 (Linux/macOS) で動いているもの</p>
+<h3 id="libraries-working-locally-2">Libraries Working Locally (2)</h3>
+<p>Libraries that are working on my local machine (Linux/macOS) as of 2024</p>
 <ul>
 <li><a href="https://github.com/JuliaInterop/CxxWrap.jl">JuliaInterop/CxxWrap.jl</a>
 <ul>
-<li>C++ の機能を Julia から使えるようにするライブラリ</li>
-<li><a href="https://github.com/JuliaInterop/libcxxwrap-julia">JuliaInterop/libcxxwrap-julia</a> とセットで使う</li>
+<li>A library that allows using C++ features from Julia</li>
+<li>Used in conjunction with <a href="https://github.com/JuliaInterop/libcxxwrap-julia">JuliaInterop/libcxxwrap-julia</a></li>
 </ul></li>
 </ul>
-<p>今日はこっちを話す</p>
+<p>This is what we will discuss today</p>
 </section>
 <section class="slide level2">
 
-<h3 id="cxxwrap.jl-を用いたアプリケーション">CxxWrap.jl を用いたアプリケーション</h3>
+<h3 id="applications-using-cxxwrap.jl">Applications Using CxxWrap.jl</h3>
 <ul>
 <li><a href="https://github.com/JuliaImages/OpenCV.jl">JuliaImages/OpenCV.jl</a></li>
 <li><a href="https://github.com/oscar-system/Polymake.jl">oscar-system/Polymake.jl</a></li>
 <li><a href="https://github.com/grasph/WrapIt.jl">grasph/WrapIt.jl</a>
 <ul>
-<li>CxxWrap.jl では C++ の機能を使うためのラッパー関数を手動で書かなければいけない．その自動化を試みている</li>
+<li>With CxxWrap.jl, you have to manually write wrapper functions to use C++ features. This library attempts to automate that process</li>
 <li><a href="https://github.com/grasph/wrapit">grasph/wrapit</a></li>
-<li><a href="https://github.com/JuliaHEP/Geant4.jl">Geant4.jl</a> がその成功例</li>
+<li><a href="https://github.com/JuliaHEP/Geant4.jl">Geant4.jl</a> is a successful example</li>
 </ul></li>
 </ul>
 </section>
-<section id="ここからは-cxxwrap.jl-入門" class="slide level2">
-<h2>ここからは CxxWrap.jl 入門</h2>
+<section id="introduction-to-cxxwrap.jl-from-here" class="slide level2">
+<h2>Introduction to CxxWrap.jl from here</h2>
 <ul>
-<li>教材:
+<li>Teaching materials:
 <ul>
 <li>https://github.com/terasakisatoshi/cmake-playground
 <ul>
-<li>CMake のお勉強のために作ったもの</li>
+<li>Created for studying CMake</li>
 </ul></li>
 </ul></li>
 </ul>
 </section>
 <section class="slide level2">
 
-<h3 id="用意するもの">用意するもの</h3>
+<h3 id="items-needed">Items Needed</h3>
 <ul>
-<li>C++17 をサポートするコンパイラ (CxxWrap.jl の要請)</li>
-<li>Julia (今回は v1.10 を使う)</li>
-<li>C++ のコード
+<li>A compiler that supports C++17 (required by CxxWrap.jl)</li>
+<li>Julia (using v1.10 in this case)</li>
+<li>C++ code
 <ul>
-<li>ビルドができるぐらいマトモに動作してる C++ プロジェクトと環境</li>
-<li>Docker が便利</li>
+<li>A reasonably functioning C++ project and environment that can be built</li>
+<li>Docker is convenient</li>
 </ul></li>
-<li>人間
+<li>A human
 <ul>
-<li>使いたい関数に対して MWE (Minimal working examples) が作れる程度の C++ 能力</li>
-<li>シェルスクリプト, Make, CMake を扱う能力
+<li>Ability to create MWE (Minimal Working Examples) for the functions you want to use</li>
+<li>Ability to handle shell scripts, Make, CMake
 <ul>
 <li><code>bash</code>, <code>make</code>, <code>cmake</code></li>
 </ul></li>
-<li>segmentation fault (core dumped) に折れない心
+<li>A resilient spirit against segmentation faults (core dumped)
 <ul>
-<li>very important(重要)</li>
+<li>very important</li>
 </ul></li>
 </ul></li>
 </ul>
 </section>
 <section class="slide level2">
 
-<h3 id="cxxwrap.jl-のインストール">CxxWrap.jl のインストール</h3>
+<h3 id="installing-cxxwrap.jl">Installing CxxWrap.jl</h3>
 <div class="sourceCode" id="cb1"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a></a>julia<span class="op">&gt;</span> <span class="im">using</span> <span class="bu">Pkg;</span> Pkg.add(&quot;CxxWrap&quot;)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ul>
-<li>Julia から C++ の機能を使うための呪文(マクロ)を使うことができる</li>
-<li>ビルド済み <code>https://github.com/JuliaInterop/libcxxwrap-julia</code> を利用できる</li>
+<li>Allows the use of spells (macros) to use C++ features from Julia</li>
+<li>Can use the pre-built <code>https://github.com/JuliaInterop/libcxxwrap-julia</code></li>
 </ul>
 </section>
 <section class="slide level2">
 
-<h3 id="ワークフロー">ワークフロー</h3>
+<h3 id="workflow">Workflow</h3>
 <ul>
-<li>C++ のコードを用意</li>
-<li>C++ と Julia をつなげるためのコードを用意</li>
-<li>ビルド</li>
-<li>Julia 側の整備</li>
-<li>テスト
+<li>Prepare the C++ code</li>
+<li>Prepare the code to connect C++ and Julia</li>
+<li>Build</li>
+<li>Set up on the Julia side</li>
+<li>Test
 <ul>
-<li>入出力が C++ の時の結果と Julia での結果が崩れてないか</li>
+<li>Check if the input/output results are consistent between C++ and Julia</li>
 </ul></li>
 </ul>
 </section>
 <section class="slide level2">
 
-<h3 id="c-のコード">C++ のコード</h3>
-<p>受け取った文字列をそのまま返す関数</p>
+<h3 id="c-code">C++ Code</h3>
+<p>A function that returns the received string as is</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb2-1"><a></a><span class="pp">#include</span><span class="im">&lt;string&gt;</span></span>
 <span id="cb2-2"><a></a></span>
 <span id="cb2-3"><a></a><span class="bu">std::</span>string greet<span class="op">(</span><span class="bu">std::</span>string msg<span class="op">)</span></span>
@@ -1383,20 +1383,20 @@ SatoshiTerasaki@AtelierArith
 </section>
 <section class="slide level2">
 
-<h3 id="すぐ使いたい人向け">すぐ使いたい人向け</h3>
+<h3 id="for-those-who-want-to-use-it-immediately">For Those Who Want to Use It Immediately</h3>
 <div class="sourceCode" id="cb3"><pre class="sourceCode numberSource bash number-lines code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a></a><span class="fu">git</span> clone https://github.com/terasakisatoshi/cmake-playground.git</span>
 <span id="cb3-2"><a></a><span class="bu">cd</span> cmake-playground/cxxwrap1</span>
 <span id="cb3-3"><a></a><span class="ex">docker</span> build <span class="at">-t</span> cxxwrap1 .</span>
 <span id="cb3-4"><a></a><span class="ex">docker</span> run <span class="at">--rm</span> <span class="at">-it</span> <span class="at">-v</span> <span class="va">$PWD</span>:/work <span class="at">-w</span> /work cxxwrap1 bash <span class="at">-c</span> <span class="st">&#39;bash build.sh &amp;&amp; julia callcxx.jl&#39;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>下記のようなログが出力されればOK</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource console number-lines code-with-copy"><code class="sourceCode"><span id="cb4-1"><a></a>＜色々ビルドのログが流れる＞</span>
+<p>If you see logs like the following, it’s OK</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource console number-lines code-with-copy"><code class="sourceCode"><span id="cb4-1"><a></a>&lt;Various build logs flow&gt;</span>
 <span id="cb4-2"><a></a>Test Summary: | Pass  Total  Time</span>
 <span id="cb4-3"><a></a>greet         |    1      1  0.0s</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section class="slide level2">
 
-<h3 id="greet-関数をラップする"><code>greet</code> 関数をラップする</h3>
-<p>下記のような C++ コードを用意する</p>
+<h3 id="wrapping-the-greet-function">Wrapping the <code>greet</code> Function</h3>
+<p>Prepare the following C++ code</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb5-1"><a></a><span class="co">// hello.cpp</span></span>
 <span id="cb5-2"><a></a><span class="pp">#include </span><span class="im">&lt;string&gt;</span></span>
 <span id="cb5-3"><a></a></span>
@@ -1416,7 +1416,7 @@ SatoshiTerasaki@AtelierArith
 </section>
 <section class="slide level2">
 
-<h3 id="ビルドする">ビルドする</h3>
+<h3 id="building">Building</h3>
 <div class="sourceCode" id="cb6"><pre class="sourceCode numberSource sh number-lines code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a></a><span class="co"># build.sh の一部改変</span></span>
 <span id="cb6-2"><a></a><span class="va">SHARED_LIB_EXT</span><span class="op">=</span><span class="st">&quot;.so&quot;</span> <span class="co"># Linux</span></span>
 <span id="cb6-3"><a></a><span class="va">SHARED_LIB_EXT</span><span class="op">=</span><span class="st">&quot;.dylib&quot;</span> <span class="co"># Apple</span></span>
@@ -1436,31 +1436,31 @@ SatoshiTerasaki@AtelierArith
 </section>
 <section class="slide level2">
 
-<h3 id="コンパイルオプションについて">コンパイルオプションについて</h3>
+<h3 id="about-compile-options">About Compile Options</h3>
 <ul>
-<li><code>-I</code> でヘッダーファイルのパスを指定する
+<li>Specify the path to the header files with <code>-I</code>
 <ul>
-<li>関数の宣言を取得</li>
-<li><code>julia.h</code>, <code>jlcxx/jlcxx.hpp</code> を使うため</li>
+<li>To obtain function declarations</li>
+<li>To use <code>julia.h</code>, <code>jlcxx/jlcxx.hpp</code></li>
 </ul></li>
-<li><code>-L</code> でライブラリのパスを指定する
+<li>Specify the path to the libraries with <code>-L</code>
 <ul>
-<li>関数の定義を取得</li>
-<li><code>libjulia</code>, <code>libcxxwrap_julia</code> とリンクするため</li>
+<li>To obtain function definitions</li>
+<li>To link with <code>libjulia</code>, <code>libcxxwrap_julia</code></li>
 </ul></li>
 </ul>
 </section>
 <section class="slide level2">
 
-<h3 id="bash-build.sh-による生成物"><code>bash build.sh</code> による生成物</h3>
+<h3 id="artifacts-generated-by-bash-build.sh">Artifacts Generated by <code>bash build.sh</code></h3>
 <ul>
-<li><code>libhello&lt;拡張子&gt;</code> が生成される.</li>
-<li><code>.so</code>, <code>.dylib</code>, <code>.dll</code> など Julia 側からはこの共有ライブラリを実行時に読み込む</li>
+<li><code>libhello&lt;extension&gt;</code> is generated.</li>
+<li><code>.so</code>, <code>.dylib</code>, <code>.dll</code>, etc. This shared library is loaded at runtime from the Julia side</li>
 </ul>
 </section>
 <section class="slide level2">
 
-<h3 id="julia-側から使う">Julia 側から使う</h3>
+<h3 id="using-from-the-julia-side">Using from the Julia Side</h3>
 <div class="sourceCode" id="cb7"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a></a><span class="co"># Load the module and generate the functions</span></span>
 <span id="cb7-2"><a></a><span class="kw">module</span> CppHello</span>
 <span id="cb7-3"><a></a><span class="im">using</span> <span class="bu">Libdl</span>: dlext</span>
@@ -1479,10 +1479,10 @@ SatoshiTerasaki@AtelierArith
 </section>
 <section class="slide level2">
 
-<h3 id="julia-パッケージのテスト">Julia パッケージのテスト</h3>
+<h3 id="testing-the-julia-package">Testing the Julia Package</h3>
 <ul>
-<li><code>CppHello</code> モジュールの中に <code>greet</code> という関数が定義される</li>
-<li>下記のようにテストをする</li>
+<li>A function called <code>greet</code> is defined within the <code>CppHello</code> module</li>
+<li>Test as follows</li>
 </ul>
 <div class="sourceCode" id="cb8"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a></a><span class="im">using</span> <span class="bu">Test</span></span>
 <span id="cb8-2"><a></a></span>
@@ -1493,25 +1493,25 @@ SatoshiTerasaki@AtelierArith
 </section>
 <section class="slide level2">
 
-<h3 id="ワークフローの改善">ワークフローの改善</h3>
+<h3 id="improving-the-workflow">Improving the Workflow</h3>
 <ul>
-<li>C++ のコードを用意</li>
-<li>C++ と Julia をつなげるためのコードを用意</li>
-<li>ビルド（<strong>ここが一番しんどい</strong>）</li>
-<li>Julia 側の整備</li>
-<li>テスト</li>
-<li>みんなに使ってらう</li>
+<li>Prepare the C++ code</li>
+<li>Prepare the code to connect C++ and Julia</li>
+<li>Build (<strong>this is the hardest part</strong>)</li>
+<li>Set up on the Julia side</li>
+<li>Test</li>
+<li>Let everyone use it</li>
 </ul>
 </section>
 <section class="slide level2">
 
-<h4 id="ビルドここが一番しんどい">ビルド（<strong>ここが一番しんどい</strong>）</h4>
+<h4 id="building-this-is-the-hardest-part">Building (<strong>this is the hardest part</strong>)</h4>
 <ul>
-<li><p>大事なことなので２回言いました</p></li>
-<li><p>プラクティカルな例（大規模なC++プロジェクト）をラップする際，CMake(ソースコードのビルド管理ツール) と仲良くすることになる．</p>
+<li><p>Repeated for emphasis</p></li>
+<li><p>When wrapping a practical example (a large-scale C++ project), you will need to get along with CMake (a build management tool for source code).</p>
 <ul>
-<li><code>CMakeLists.txt</code>, <code>cmake ..</code> みたいなやつ. 見たことあるでしょ？それです．</li>
-<li><code>cmake-playground/cxxwrap2</code> を見てね</li>
+<li>Things like <code>CMakeLists.txt</code>, <code>cmake ..</code>. You’ve seen them, right? That’s it.</li>
+<li>Check out <code>cmake-playground/cxxwrap2</code></li>
 </ul></li>
 </ul>
 </section>
@@ -1536,27 +1536,27 @@ SatoshiTerasaki@AtelierArith
 </section>
 <section class="slide level2">
 
-<h3 id="cmake-を使うメリット">CMake を使うメリット</h3>
+<h3 id="benefits-of-using-cmake">Benefits of Using CMake</h3>
 <ul>
-<li>cxxwrap1 の例では <code>jlcxx/jlcxx.hpp</code>, <code>julia.h</code> をインクルードするためのディレクトリを指定する必要があった
+<li>In the cxxwrap1 example, it was necessary to specify directories to include <code>jlcxx/jlcxx.hpp</code>, <code>julia.h</code>
 <ul>
-<li><code>hello.cpp</code> をコンパイルするために表面上見えない <code>julia.h</code> の場所を知る必要があった</li>
+<li>Needed to know the location of <code>julia.h</code> to compile <code>hello.cpp</code></li>
 </ul></li>
-<li>今回の場合そういった情報を <code>JlCxx::cxxwrap_julia</code> に押し付けることができる．<a href="https://github.com/JuliaInterop/libcxxwrap-julia/blob/ca848c7dd8d0c1793040b01269c87282cfba9614/CMakeLists.txt#L135-L144">ここ</a> を参照</li>
+<li>In this case, such information can be delegated to <code>JlCxx::cxxwrap_julia</code>. Refer to <a href="https://github.com/JuliaInterop/libcxxwrap-julia/blob/ca848c7dd8d0c1793040b01269c87282cfba9614/CMakeLists.txt#L135-L144">here</a></li>
 </ul>
 </section>
 <section class="slide level2">
 
-<h3 id="ビルド">ビルド</h3>
+<h3 id="build">Build</h3>
 <ul>
-<li><code>cmake</code> コマンドでビルドができる</li>
-<li><code>find_package(JlCxx)</code> によって C++ パッケージ <a href="https://github.com/JuliaInterop/libcxxwrap-julia/blob/main/CMakeLists.txt"><code>JlCxx</code></a> の情報を取得することができる．
+<li>You can build using the <code>cmake</code> command.</li>
+<li>You can obtain information about the C++ package <a href="https://github.com/JuliaInterop/libcxxwrap-julia/blob/main/CMakeLists.txt"><code>JlCxx</code></a> using <code>find_package(JlCxx)</code>.
 <ul>
-<li>それはどこ？ <code>CXXWRAP_PREFIX</code> で指定</li>
-<li>cmake にその情報を伝えるには？
+<li>Where is it? Specify with <code>CXXWRAP_PREFIX</code>.</li>
+<li>How to inform cmake of this information?
 <ul>
-<li><code>-DCMAKE_PREFIX_PATH</code> オプションで指定</li>
-<li>または <code>export CMAKE_PREFIX_PATH=...</code> のようにして環境変数で定義</li>
+<li>Specify with the <code>-DCMAKE_PREFIX_PATH</code> option.</li>
+<li>Or define it as an environment variable like <code>export CMAKE_PREFIX_PATH=...</code>.</li>
 </ul></li>
 </ul></li>
 </ul>
@@ -1565,16 +1565,16 @@ SatoshiTerasaki@AtelierArith
 <span id="cb10-3"><a></a><span class="fu">cmake</span> <span class="at">-S</span> . <span class="at">-B</span> ./build <span class="at">-DCMAKE_BUILD_TYPE</span><span class="op">=</span>Release <span class="at">-DCMAKE_PREFIX_PATH</span><span class="op">=</span><span class="va">$CXXWRAP_PREFIX</span></span>
 <span id="cb10-4"><a></a><span class="fu">cmake</span> <span class="at">--build</span> ./build <span class="at">--config</span> Release <span class="at">-j</span> <span class="kw">`</span><span class="fu">nproc</span><span class="kw">`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ul>
-<li><code>./build/libhello&lt;拡張子&gt;</code> が出来上がる．</li>
-<li>Julia 側はそのパスを指定するように修正すれば良い</li>
+<li><code>./build/libhello&lt;extension&gt;</code> will be created.</li>
+<li>On the Julia side, you just need to modify it to specify that path.</li>
 </ul>
 </section>
 <section class="slide level2">
 
-<h4 id="ワークフローの改善-1">ワークフローの改善</h4>
-<p><code>cmake-playground/cxxwrap4</code> では Julia の標準のディレクトリ構造を採用している</p>
+<h4 id="workflow-improvement">Workflow Improvement</h4>
+<p>In <code>cmake-playground/cxxwrap4</code>, the standard directory structure of Julia is adopted.</p>
 <ul>
-<li><code>./deps</code> ディレクトリに Julia パッケージのビルドをする際のスクリプト・ソースコードを配置する</li>
+<li>Place scripts and source code for building Julia packages in the <code>./deps</code> directory.</li>
 </ul>
 <div class="sourceCode" id="cb11"><pre class="sourceCode numberSource console number-lines code-with-copy"><code class="sourceCode"><span id="cb11-1"><a></a>$ tree cmake-playground/cxxwrap4</span>
 <span id="cb11-2"><a></a>├── Project.toml</span>
@@ -1592,69 +1592,69 @@ SatoshiTerasaki@AtelierArith
 </section>
 <section class="slide level2">
 
-<h3 id="julia-パッケージのビルド">Julia パッケージのビルド</h3>
+<h3 id="building-julia-packages">Building Julia Packages</h3>
 <ul>
-<li><code>julia&gt; using Pkg; Pkg.build()</code> で Julia パッケージのビルドができる</li>
-<li><code>Pkg.build()</code> は Julia スクリプト <code>deps/build.jl</code> を実行する.</li>
+<li>You can build Julia packages with <code>julia&gt; using Pkg; Pkg.build()</code>.</li>
+<li><code>Pkg.build()</code> executes the Julia script <code>deps/build.jl</code>.</li>
 </ul>
-<p>例えば <code>cmake-playground/cxxwrap4</code> では次のようにしている</p>
+<p>For example, in <code>cmake-playground/cxxwrap4</code>, it is done as follows:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a></a><span class="co"># build.jl</span></span>
 <span id="cb12-2"><a></a><span class="fu">run</span>(<span class="ss">`bash build.sh`</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ul>
-<li>もう少し↑をスマートにできないものか？</li>
-<li><a href="https://github.com/JuliaPackaging/CMake.jl">JuliaPackaging/CMake.jl</a> は 3.15 系のものを使うようになっている</li>
-<li>最新の cmake を使いたい人は <a href="https://github.com/JuliaBinaryWrappers/CMake_jll.jl">JuliaBinaryWrappers/CMake_jll.jl</a> を使うべきかもしれない（？）</li>
+<li>Can’t we make the above a bit smarter?</li>
+<li><a href="https://github.com/JuliaPackaging/CMake.jl">JuliaPackaging/CMake.jl</a> uses version 3.15.</li>
+<li>Those who want to use the latest cmake might want to use <a href="https://github.com/JuliaBinaryWrappers/CMake_jll.jl">JuliaBinaryWrappers/CMake_jll.jl</a> (?)</li>
 </ul>
 </section>
 <section class="slide level2">
 
-<h3 id="ワークフローの改善-2">ワークフローの改善</h3>
+<h3 id="workflow-improvement-1">Workflow Improvement</h3>
 <ul>
-<li>C++ のコードを用意</li>
-<li>C++ と Julia をつなげるためのコードを用意</li>
-<li>ビルド (<code>cmake</code>)</li>
-<li>Julia 側の整備 (<code>./deps</code> に)</li>
-<li>テスト</li>
-<li>みんなに使ってらう(&lt;– ここをどうするか？)</li>
+<li>Prepare C++ code.</li>
+<li>Prepare code to connect C++ and Julia.</li>
+<li>Build (<code>cmake</code>).</li>
+<li>Set up on the Julia side (in <code>./deps</code>).</li>
+<li>Test.</li>
+<li>Make it available to everyone (&lt;– How to do this?)</li>
 </ul>
 </section>
 <section class="slide level2">
 
-<h3 id="ビルド済みライブラリの提供">ビルド済みライブラリの提供</h3>
-<p>Julia のインターフェースしか興味ない人・環境に対してローカルでビルドさせるのはしんどい（環境構築の学習コストが高い）BinaryBuilder.jl を使えば <code>LibHello_jll</code> のように事前ビルド済みの JLL packages (a pun on “Dynamic-Link Library”, with the J standing for Julia) パッケージを提供すれば良い</p>
+<h3 id="providing-pre-built-libraries">Providing Pre-built Libraries</h3>
+<p>For those who are only interested in the Julia interface, building locally can be tough (high learning cost for setting up the environment). Using BinaryBuilder.jl, you can provide pre-built JLL packages (a pun on “Dynamic-Link Library”, with the J standing for Julia) like <code>LibHello_jll</code>.</p>
 <ul>
-<li><a href="https://github.com/terasakisatoshi/LibHelloBuilder.jl">ビルド環境</a></li>
-<li><a href="https://github.com/terasakisatoshi/libhello_jll.jl">ビルド済み JLL 置き場</a></li>
-<li><a href="https://github.com/terasakisatoshi/LibHello.jl">JLL を使う Julia パッケージ</a></li>
+<li><a href="https://github.com/terasakisatoshi/LibHelloBuilder.jl">Build Environment</a></li>
+<li><a href="https://github.com/terasakisatoshi/libhello_jll.jl">Pre-built JLL Repository</a></li>
+<li><a href="https://github.com/terasakisatoshi/LibHello.jl">Julia Package Using JLL</a></li>
 </ul>
-<p>↑メンテしてないけれどコンセプトは今でも通じるところはある（はず）</p>
+<p>Although not maintained, the concept is still relevant (probably).</p>
 </section>
 <section class="slide level2">
 
-<h3 id="ラッパーの例">ラッパーの例</h3>
+<h3 id="example-of-a-wrapper">Example of a Wrapper</h3>
 <ul>
-<li><p><code>C++ と Julia をつなげるためのコードを用意</code> ここをどうするか</p></li>
-<li><p>数値計算の文脈だと配列を渡して配列を返すプログラムが書ければ良いけれど 気軽に試せる例が少ない…</p></li>
-<li><p>というわけで <a href="https://github.com/terasakisatoshi/cmake-playground/blob/main/cxxwrap6/deps/src/hello.cpp">cmake-playground/cxxwrap6</a></p></li>
-<li><p><code>double(C++), Float64(Julia)</code> の要素を持つ配列(1, 2 次元配列)に対して演算を施す例を作った．</p></li>
-<li><p>テンプレートを使っている関数をラップする方法誰か教えてください</p></li>
+<li><p>How to handle the part “Prepare code to connect C++ and Julia”.</p></li>
+<li><p>In the context of numerical computation, it would be good if you can write a program that passes arrays and returns arrays, but there are few examples to try easily…</p></li>
+<li><p>Therefore, <a href="https://github.com/terasakisatoshi/cmake-playground/blob/main/cxxwrap6/deps/src/hello.cpp">cmake-playground/cxxwrap6</a>.</p></li>
+<li><p>Created an example that performs operations on arrays (1D, 2D arrays) with elements <code>double(C++), Float64(Julia)</code>.</p></li>
+<li><p>Someone please teach me how to wrap functions using templates.</p></li>
 </ul>
 </section>
 <section class="slide level2">
 
-<h3 id="julia-の配列を渡して上書きする例">Julia の配列を渡して上書きする例</h3>
-<p>要素を二倍にする例</p>
+<h3 id="example-of-passing-and-overwriting-julia-arrays">Example of Passing and Overwriting Julia Arrays</h3>
+<p>Example of Doubling Elements</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb13-1"><a></a><span class="dt">void</span> inplace_twice<span class="op">(</span>jlcxx<span class="op">::</span>ArrayRef<span class="op">&lt;</span><span class="dt">double</span><span class="op">,</span> <span class="dv">2</span><span class="op">&gt;</span> jlx<span class="op">)</span> <span class="op">{</span></span>
 <span id="cb13-2"><a></a>  <span class="cf">for</span> <span class="op">(</span><span class="dt">size_t</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> jlx<span class="op">.</span>size<span class="op">();</span> i<span class="op">++)</span> <span class="op">{</span></span>
 <span id="cb13-3"><a></a>    jlx<span class="op">[</span>i<span class="op">]</span> <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> jlx<span class="op">[</span>i<span class="op">];</span></span>
 <span id="cb13-4"><a></a>  <span class="op">}</span></span>
 <span id="cb13-5"><a></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>対応する Julia の関数を呼び出すと二次元配列の各要素が二倍になる</p>
+<p>Calling the corresponding Julia function doubles each element of the two-dimensional array.</p>
 </section>
 <section class="slide level2">
 
-<h3 id="配列を返す">配列を返す</h3>
-<p>CxxWrap.jl の README.md にある <a href="https://github.com/JuliaInterop/CxxWrap.jl?tab=readme-ov-file#const-arrays">Const arrays</a> を参照</p>
+<h3 id="returning-an-array">Returning an Array</h3>
+<p>Refer to <a href="https://github.com/JuliaInterop/CxxWrap.jl?tab=readme-ov-file#const-arrays">Const arrays</a> in the README.md of CxxWrap.jl</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb14-1"><a></a><span class="at">const</span> <span class="dt">double</span><span class="op">*</span> const_vector<span class="op">()</span></span>
 <span id="cb14-2"><a></a><span class="op">{</span></span>
 <span id="cb14-3"><a></a>  <span class="co">// static キーワードが重要</span></span>
@@ -1673,13 +1673,13 @@ SatoshiTerasaki@AtelierArith
 <span id="cb14-16"><a></a></span>
 <span id="cb14-17"><a></a>mymodule<span class="op">.</span>method<span class="op">(</span><span class="st">&quot;const_vector&quot;</span><span class="op">,</span> <span class="op">[]()</span> <span class="op">{</span> <span class="cf">return</span> jlcxx<span class="op">::</span>make_const_array<span class="op">(</span>const_vector<span class="op">(),</span> <span class="dv">3</span><span class="op">);</span> <span class="op">});</span></span>
 <span id="cb14-18"><a></a>mymodule<span class="op">.</span>method<span class="op">(</span><span class="st">&quot;const_matrix&quot;</span><span class="op">,</span> <span class="op">[]()</span> <span class="op">{</span> <span class="cf">return</span> jlcxx<span class="op">::</span>make_const_array<span class="op">(</span>const_matrix<span class="op">(),</span> <span class="dv">3</span><span class="op">,</span> <span class="dv">2</span><span class="op">);</span> <span class="op">});</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>↑の例だと固定長・固定サイズしか扱えなさそう？</p>
-<p>動的なサイズを返したいぞ？</p>
+<p>In the above example, it seems to handle only fixed-length and fixed-size arrays?</p>
+<p>Want to return a dynamic size?</p>
 </section>
 <section class="slide level2">
 
 <ul>
-<li><a href="https://github.com/JuliaInterop/CxxWrap.jl?tab=readme-ov-file#returning-a-julia-array">Returning a Julia array</a> がランタイム時にセグフォするんだが．．．？</li>
+<li><a href="https://github.com/JuliaInterop/CxxWrap.jl?tab=readme-ov-file#returning-a-julia-array">Returning a Julia array</a> causes a segmentation fault at runtime…?</li>
 </ul>
 <div class="sourceCode" id="cb15"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb15-1"><a></a><span class="co">// これは実行時にセグフォする. 辛い</span></span>
 <span id="cb15-2"><a></a>mymodule<span class="op">.</span>method<span class="op">(</span><span class="st">&quot;array&quot;</span><span class="op">,</span> <span class="op">[]</span> <span class="op">()</span> <span class="op">{</span></span>
@@ -1691,7 +1691,7 @@ SatoshiTerasaki@AtelierArith
 <span id="cb15-8"><a></a>    <span class="cf">return</span> data<span class="op">;</span></span>
 <span id="cb15-9"><a></a><span class="op">});</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ul>
-<li><code>std::vector</code> は返すことができた. Julia 側からは <code>AbstractVector</code> のサブタイプである <code>CxxWrap.StdVector</code> のインスタンスとして取得できる．</li>
+<li><code>std::vector</code> can be returned. On the Julia side, it can be obtained as an instance of <code>CxxWrap.StdVector</code>, a subtype of <code>AbstractVector</code>.</li>
 </ul>
 <div class="sourceCode" id="cb16"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb16-1"><a></a><span class="co">// これはできてる</span></span>
 <span id="cb16-2"><a></a><span class="bu">std::</span>vector<span class="op">&lt;</span><span class="dt">double</span><span class="op">&gt;</span> create_stdvec<span class="op">(</span><span class="dt">int</span> N<span class="op">){</span></span>
@@ -1704,9 +1704,9 @@ SatoshiTerasaki@AtelierArith
 </section>
 <section class="slide level2">
 
-<h3 id="例-要素を-3-倍にする関数">例: 要素を 3 倍にする関数</h3>
+<h3 id="example-function-to-triple-elements">Example: Function to Triple Elements</h3>
 <ul>
-<li>行列であれば <code>static Eigen::MatrixXd y;</code> を宣言して y に値を格納する方法を採用すればできた．</li>
+<li>For matrices, it worked by declaring <code>static Eigen::MatrixXd y;</code> and storing values in y.</li>
 </ul>
 <div class="sourceCode" id="cb17"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb17-1"><a></a><span class="pp">#include </span><span class="im">&lt;Eigen/Dense&gt;</span></span>
 <span id="cb17-2"><a></a></span>
@@ -1724,9 +1724,9 @@ SatoshiTerasaki@AtelierArith
 </section>
 <section class="slide level2">
 
-<h3 id="例-要素を-3-倍にする関数-1">例: 要素を 3 倍にする関数</h3>
+<h3 id="example-function-to-triple-elements-1">Example: Function to Triple Elements</h3>
 <ul>
-<li>異なるサイズを持つ <code>x::Matrix{Float64}</code> を入力として受け付けることができている</li>
+<li>It can accept <code>x::Matrix{Float64}</code> with different sizes as input.</li>
 </ul>
 <div class="sourceCode" id="cb18"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a></a><span class="im">using</span> <span class="bu">MyCxxWrap6</span></span>
 <span id="cb18-2"><a></a>x <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">5</span>, <span class="fl">5</span>)</span>
@@ -1738,15 +1738,15 @@ SatoshiTerasaki@AtelierArith
 </section>
 <section class="slide level2">
 
-<h3 id="前のページの補足">前のページの補足</h3>
+<h3 id="supplement-to-the-previous-page">Supplement to the Previous Page</h3>
 <ul>
-<li>前のページは Eigen に依存している．でも色々都合が良い</li>
-<li>Eigen を使っているライブラリをラップする分には問題ない</li>
-<li>Eigen のメモリレイアウトは Colum major らしいので</li>
+<li>The previous page depends on Eigen. However, it is convenient in many ways.</li>
+<li>There is no problem wrapping libraries that use Eigen.</li>
+<li>Eigen’s memory layout is column-major, so</li>
 </ul>
 <div class="sourceCode" id="cb19"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb19-1"><a></a><span class="kw">auto</span> x <span class="op">=</span> Eigen<span class="op">::</span>Map<span class="op">&lt;</span>Eigen<span class="op">::</span>MatrixXd<span class="op">&gt;(</span>jlx<span class="op">.</span>data<span class="op">(),</span> size0<span class="op">,</span> size1<span class="op">);</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>のように Julia のデータ <code>jlx</code> が持っている数値データを C++ 側にスムーズに渡せる.</p>
-<p>Const Arrays の例の場合 Julia 側は 3x2 行列として理解される</p>
+<p>allows smooth transfer of numerical data held by Julia’s <code>jlx</code> to the C++ side.</p>
+<p>In the case of the Const Arrays example, it is understood as a 3x2 matrix on the Julia side.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb20-1"><a></a><span class="at">const</span> <span class="dt">double</span><span class="op">*</span> const_matrix<span class="op">()</span></span>
 <span id="cb20-2"><a></a><span class="op">{</span></span>
 <span id="cb20-3"><a></a>  <span class="co">// static キーワードが重要</span></span>
@@ -1756,8 +1756,8 @@ SatoshiTerasaki@AtelierArith
 </section>
 <section class="slide level2">
 
-<h3 id="前のページの補足-1">前のページの補足</h3>
-<p>列に関するループ変数 <code>c</code> を先に回さないと直感的な結果を出力できない</p>
+<h3 id="supplement-to-the-previous-page-1">Supplement to the Previous Page</h3>
+<p>If you don’t loop the column variable <code>c</code> first, you won’t get intuitive results.</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a></a>void <span class="fu">f</span>(jlcxx<span class="op">::</span><span class="dt">ArrayRef</span>&lt;double, <span class="fl">2</span><span class="op">&gt;</span> jlx) {</span>
 <span id="cb21-2"><a></a>  size_t size0 <span class="op">=</span> <span class="fu">jl_array_dim</span>(jlx.m_array, <span class="fl">0</span>);</span>
 <span id="cb21-3"><a></a>  size_t size1 <span class="op">=</span> <span class="fu">jl_array_dim</span>(jlx.m_array, <span class="fl">1</span>);</span>
@@ -1781,59 +1781,59 @@ SatoshiTerasaki@AtelierArith
 </section>
 <section class="slide level2">
 
-<h3 id="c-側の型をそのまま返したい">C++ 側の型をそのまま返したい</h3>
-<p>今までの例は便利ではあるが，C++ 側のクラスを返す関数に対応できない</p>
+<h3 id="want-to-return-c-types-as-they-are">Want to Return C++ Types as They Are</h3>
+<p>The previous examples are convenient but cannot handle functions that return C++ classes.</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode numberSource cpp number-lines code-with-copy"><code class="sourceCode cpp"><span id="cb22-1"><a></a><span class="co">// この機能を持つ C++ 関数を Julia 側から利用したい</span></span>
 <span id="cb22-2"><a></a>Eigen<span class="op">::</span>MatrixXd example1<span class="op">(</span>Eigen<span class="op">::</span>MatrixXd x<span class="op">){</span></span>
 <span id="cb22-3"><a></a>  <span class="cf">return</span> <span class="dv">3</span> <span class="op">*</span> x<span class="op">;</span></span>
 <span id="cb22-4"><a></a><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><code>mod.add_type</code> を使ってできる</p>
+<p>You can do it using <code>mod.add_type</code>.</p>
 </section>
 <section class="slide level2">
 
 <h3 id="easyeigeninterface.jl">EasyEigenInterface.jl</h3>
-<p>下記が Julia のコードとして実行できる</p>
+<p>The following can be executed as Julia code:</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode numberSource julia number-lines code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a></a><span class="im">using</span> <span class="bu">EasyEigenInterface</span></span>
 <span id="cb23-2"><a></a>x <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">3</span>,<span class="fl">3</span>)</span>
 <span id="cb23-3"><a></a>m <span class="op">=</span> <span class="fu">MatrixXd</span>(x)</span>
 <span id="cb23-4"><a></a><span class="pp">@assert</span> EasyEigenInterface.<span class="fu">example1</span>(m) <span class="op">==</span> <span class="fl">3</span>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ul>
-<li><p>ラッパーを作っているところはこちら <a href="https://github.com/AtelierArith/EasyEigenInterface.jl/blob/main/deps/jl_easy_eigen_interface.cpp">EasyEigenInterface.jl/deps/src/jl_easy_eigen_interface.cpp</a></p></li>
-<li><p>作ったのは良いが, <code>EasyEigenInterface.jl</code> で対応づけた MatrixXd 型を他の Julia ライブラリで活用する方法がわからない…</p>
+<li><p>The wrapper is created here: <a href="https://github.com/AtelierArith/EasyEigenInterface.jl/blob/main/deps/jl_easy_eigen_interface.cpp">EasyEigenInterface.jl/deps/src/jl_easy_eigen_interface.cpp</a></p></li>
+<li><p>It’s good that it was created, but I don’t know how to utilize the MatrixXd type associated with <code>EasyEigenInterface.jl</code> in other Julia libraries…</p>
 <ul>
-<li>CxxWrap.StdVector みたいなことができていない…</li>
-<li>CxxWrap.jl の StdVector のコードを読めば良いと思うがその時間が取れていない</li>
+<li>It doesn’t work like <code>CxxWrap.StdVector</code>…</li>
+<li>I think I should read the code of StdVector in CxxWrap.jl, but I don’t have the time.</li>
 </ul></li>
-<li><p>いわゆる「ボクが作ったサイツヨオレオレ実装」にとどまっている．</p></li>
+<li><p>It remains as a “super-strong self-made implementation.”</p></li>
 </ul>
 </section>
 <section class="slide level2">
 
-<h3 id="そろそろ辛くなってきた">そろそろ辛くなってきた</h3>
+<h3 id="its-getting-tough">It’s Getting Tough</h3>
 <ul>
-<li>特定の機能だけを使いたい場合は人間がヘッダーファイルを眺めて書けば良い
+<li>If you only want to use specific features, a human can look at the header files and write them.
 <ul>
-<li>ただスケールしない．自分のスキル不足で自動化できてない</li>
+<li>However, it doesn’t scale. I can’t automate it due to my lack of skills.</li>
 </ul></li>
-<li>OpenCV.jl どうしてるんだろう・・・？</li>
+<li>How is OpenCV.jl doing it…?</li>
 </ul>
 </section>
 <section class="slide level2">
 
 <h3 id="wrapit">WrapIt</h3>
-<p>まだ十分試しきれてないが Geant4 という高エネルギー物理の C++ 実装はラッパー関数を自動生成しているらしい</p>
+<p>It hasn’t been fully tested yet, but it seems that the C++ implementation of high-energy physics called Geant4 automatically generates wrapper functions.</p>
 <ul>
-<li>CERN でのスライド <a href="https://indico.cern.ch/event/1307331/contributions/5593649/attachments/2722696/4730700/Geant4.jl-20230928.pdf">Geant4.jl - New Interface to Simulation Applications</a></li>
+<li>Slide from CERN <a href="https://indico.cern.ch/event/1307331/contributions/5593649/attachments/2722696/4730700/Geant4.jl-20230928.pdf">Geant4.jl - New Interface to Simulation Applications</a></li>
 </ul>
 <iframe data-external="1" src="https://www.youtube.com/embed/hr0naOrT8B4" title frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 <iframe data-external="1" src="https://www.youtube.com/embed/9amNI1-x7Y4" title frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-<p>なんかよくわからないけれどすごそう（小並感） 時間がなかったので誰か解説書いてほしい</p>
+<p>It seems amazing but I don’t really understand it (small impression) I didn’t have time, so I hope someone writes an explanation.</p>
 </section>
 <section class="slide level2">
 
-<h3 id="まとめ">まとめ</h3>
+<h3 id="summary">Summary</h3>
 <ul>
-<li>C++ Julia CxxWrap.jl の使い方を書きました</li>
+<li>I wrote about how to use C++ Julia CxxWrap.jl</li>
 </ul>
 </section>
 <section class="slide level2">
@@ -1846,58 +1846,59 @@ SatoshiTerasaki@AtelierArith
 </section>
 <section class="slide level2">
 
-<h4 id="その他色々作ったもの時間があったら試してね">その他色々作ったもの（時間があったら試してね！）</h4>
+<h4 id="various-other-things-ive-made-try-them-if-you-have-time">Various other things I’ve made (try them if you have time!)</h4>
 <ul>
 <li>https://github.com/AtelierArith/CxxRandomLogo
 <ul>
-<li>RandomLogos.jl の C++ 実装を作って Julia C++ から利用できるようにしたもの</li>
-<li>Julia の 2倍程度高速になった</li>
+<li>A C++ implementation of RandomLogos.jl that can be used from Julia C++</li>
+<li>It became about twice as fast as Julia</li>
 </ul></li>
 <li>https://github.com/AtelierArith/EasyEigenInterface.jl
 <ul>
-<li>Eigen の一部のデータをラップしたもの．オレオレ実装</li>
+<li>A wrapper for some data of Eigen. My own implementation</li>
 </ul></li>
 <li>https://github.com/AtelierArith/embedding-julia
 <ul>
-<li>C-API の例</li>
+<li>Example of C-API</li>
 </ul></li>
 <li>https://github.com/terasakisatoshi/jldev_jluna
 <ul>
-<li>jluna のセットアップを Docker で行ったもの</li>
+<li>Setup of jluna with Docker</li>
 </ul></li>
 <li>https://github.com/terasakisatoshi/MyCling.jl
 <ul>
-<li>C++ Jupyter カーネル（Jupyter で C++ を扱えるエコシステム）をインストールする手順を紹介</li>
+<li>Introduction of the procedure to install C++ Jupyter kernel (ecosystem to handle C++ in Jupyter)</li>
 </ul></li>
 </ul>
 </section>
-<section id="c-には興味がないが-c-には興味がある人へ" class="slide level2">
-<h2>C++ には興味がないが C には興味がある人へ</h2>
-<p>おめでとうございます．このスライドを読む必要は全くありません．<a href="https://github.com/JuliaInterop/Clang.jl">Clang.jl</a> を使いましょう．</p>
-<p>Clang.jl を使って binding を作った例</p>
-<p><a href="https://github.com/kikuchan/libqrean">libqrean</a> をフォークしたもの - https://github.com/terasakisatoshi/libqrean/tree/julia/LibQREAN</p>
+<section id="for-those-who-are-not-interested-in-c-but-are-interested-in-c" class="slide level2">
+<h2>For those who are not interested in C++ but are interested in C</h2>
+<p>Congratulations. You don’t need to read this slide at all. Let’s use <a href="https://github.com/JuliaInterop/Clang.jl">Clang.jl</a>.</p>
+<p>Example of creating bindings using Clang.jl</p>
+<p>Forked from <a href="https://github.com/kikuchan/libqrean">libqrean</a> - https://github.com/terasakisatoshi/libqrean/tree/julia/LibQREAN</p>
 </section>
 <section class="slide level2">
 
-<h3 id="go-programming-language-に興味がある人は">Go (programming language) に興味がある人は</h3>
+<h3 id="for-those-interested-in-go-programming-language">For those interested in Go (programming language)</h3>
 <pre><code>go build -buildmode=c-shared -o export.so</code></pre>
-<p>とすれば <code>export.h</code> を作ってくれる．Clang.jl と合わせ技でいい感じのものが作れそう？</p>
+<p>will create <code>export.h</code>. Could make something nice combined with Clang.jl?</p>
 <ul>
 <li>https://github.com/terasakisatoshi/gat/blob/terasaki/julia-api/main.go</li>
 <li>https://github.com/terasakisatoshi/gat/blob/terasaki/julia-api/main.jl</li>
 </ul>
 </section>
-<section id="c-に関する-web-上の役立つ資料" class="slide level2">
-<h2>C++ に関する Web 上の役立つ資料</h2>
+<section id="useful-resources-on-the-web-about-c" class="slide level2">
+<h2>Useful resources on the web about C++</h2>
 <ul>
-<li><a href="https://cpprefjp.github.io">cpprefjp - C++日本語リファレンス</a></li>
-<li><a href="https://rinatz.github.io/cpp-book/">IDA Kenichiro, ゼロから学ぶ C++</a></li>
+<li><a href="https://cpprefjp.github.io">cpprefjp - C++ Japanese Reference</a></li>
+<li><a href="https://rinatz.github.io/cpp-book/">IDA Kenichiro, Learning C++ from scratch</a></li>
 <li><a href="https://github.com/kaityo256/python2cpp/blob/main/header/README.md">kaityo256, python2cpp/header/README.md</a></li>
 <li><a href="https://cmake.org/cmake/help/book/mastering-cmake/cmake/Help/guide/tutorial/index.html#id1">CMake Tutorial</a></li>
 <li><a href="https://zenn.dev/termoshtt/books/cmake-tutorial">termoshtt, cmake tutorial</a></li>
-<li><a href="https://qiita.com/shohirose/items/45fb49c6b429e8b204ac"><span class="citation" data-cites="shohirose">@shohirose</span>(広瀬 翔), CMakeの使い方（その１）, Qiita</a></li>
+<li><a href="https://qiita.com/shohirose/items/45fb49c6b429e8b204ac"><span class="citation" data-cites="shohirose">@shohirose</span> (Sho Hirose), How to use CMake (Part 1), Qiita</a></li>
 <li><a href="https://github.com/dc1394/cppcode_matome">dc1394/cppcode_matome</a></li>
 </ul>
+<p>It looks like you haven’t pasted the Markdown content yet. Please provide the text you want translated, and I’ll get started on it right away.</p>
 
 <div class="quarto-auto-generated-content">
 <div class="footer footer-default">
